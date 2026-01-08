@@ -1,0 +1,41 @@
+base:
+  seed: 1111
+  lr: 0.0001
+  weight_decay: 0.0001
+  batch_size: 64
+  n_epochs: 200
+  num_workers: 8
+  alpha: 0.9           # λ₁: completeness loss weight
+  beta_max: 1.0        # β_max: max weight for hyperbolic distillation
+  gamma: 0.1           # λ₂: reconstruction weight
+  curvature: 1.0       # c: Poincaré ball curvature
+  hyp_warmup_epochs: 10  # T_warmup: epochs before hyperbolic loss kicks in
+  hyp_margin: 0.1      # τ: slack margin for hyperbolic loss
+  safety_margin: 0.00001  # ε: safety margin for numerical stability
+  ema_decay: 0.999     # µ: EMA teacher momentum
+  train_mode: regression
+  missing_rate_eval_test: 0.5
+  do_validation: true
+  save_best_model: true
+  early_stop_patience: 200
+
+
+dataset:
+  datasetName: sims
+  dataPath: /data/MSA Datasets/SIMS/Processed_/unaligned_39.pkl
+
+
+model:
+  feature_extractor:
+    bert_pretrained: /data/model/bert-base-chinese
+    input_length: [39, 55, 400]     # language, video, audio
+    token_length: [8, 8, 8]         # language, video, audio
+    heads: 8
+    input_dims: [768, 709, 33]      # dl, dv, da (language, video, audio)
+    hidden_dims: [128, 128, 128]    # language, video, audio
+    depth: 2
+
+  hyper_params:
+    hyper_depth: 3      # depth of hyper-modality learning
+    dim_head: 16        # attention head dimension
+    hyp_dim: 128        # d': hyperbolic space dimension
